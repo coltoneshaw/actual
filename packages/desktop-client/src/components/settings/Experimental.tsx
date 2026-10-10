@@ -233,6 +233,12 @@ export function ExperimentalFeatures() {
               <Trans>Budget Analysis Report</Trans>
             </FeatureToggle>
             <FeatureToggle
+              flag="budgetVsTargetReport"
+              feedbackLink="https://github.com/coltoneshaw/actual/issues/1"
+            >
+              <Trans>Budget vs Target Report</Trans>
+            </FeatureToggle>
+            <FeatureToggle
               flag="monteCarloReport"
               feedbackLink="https://github.com/actualbudget/actual/issues/8571"
             >

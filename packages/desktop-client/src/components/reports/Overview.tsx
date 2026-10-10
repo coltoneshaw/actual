@@ -57,6 +57,7 @@ import { LoadingIndicator } from './LoadingIndicator';
 import { AgeOfMoneyCard } from './reports/AgeOfMoneyCard';
 import { BalanceForecastCard } from './reports/BalanceForecastCard';
 import { BudgetAnalysisCard } from './reports/BudgetAnalysisCard';
+import { BudgetVsTargetCard } from './reports/BudgetVsTargetCard';
 import { CalendarCard } from './reports/CalendarCard';
 import { CashFlowCard } from './reports/CashFlowCard';
 import { CrossoverCard } from './reports/CrossoverCard';
@@ -114,6 +115,7 @@ export function Overview({ dashboard }: OverviewProps) {
   const [_firstDayOfWeekIdx] = useSyncedPref('firstDayOfWeekIdx');
   const firstDayOfWeekIdx = _firstDayOfWeekIdx || '0';
   const budgetAnalysisReportEnabled = useFeatureFlag('budgetAnalysisReport');
+  const budgetVsTargetReportEnabled = useFeatureFlag('budgetVsTargetReport');
   const balanceForecastReportEnabled = useFeatureFlag('balanceForecastReport');
   const monteCarloReportEnabled = useFeatureFlag('monteCarloReport');
 
@@ -606,6 +608,14 @@ export function Overview({ dashboard }: OverviewProps) {
                                   },
                                 ]
                               : []),
+                            ...(budgetVsTargetReportEnabled
+                              ? [
+                                  {
+                                    name: 'budget-vs-target-card' as const,
+                                    text: t('Budget vs target'),
+                                  },
+                                ]
+                              : []),
                             ...(balanceForecastReportEnabled
                               ? [
                                   {
@@ -851,6 +861,16 @@ export function Overview({ dashboard }: OverviewProps) {
                         ) : widget.type === 'budget-analysis-card' &&
                           budgetAnalysisReportEnabled ? (
                           <BudgetAnalysisCard
+                            widgetId={item.i}
+                            isEditing={isEditing}
+                            meta={widget.meta}
+                            onMetaChange={newMeta =>
+                              onMetaChange(item, newMeta)
+                            }
+                          />
+                        ) : widget.type === 'budget-vs-target-card' &&
+                          budgetVsTargetReportEnabled ? (
+                          <BudgetVsTargetCard
                             widgetId={item.i}
                             isEditing={isEditing}
                             meta={widget.meta}
