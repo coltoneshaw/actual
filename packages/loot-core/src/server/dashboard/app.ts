@@ -37,6 +37,7 @@ export function isWidgetType(
     'spending-card',
     'crossover-card',
     'budget-analysis-card',
+    'budget-vs-target-card',
     'markdown-card',
     'summary-card',
     'calendar-card',

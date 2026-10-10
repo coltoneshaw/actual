@@ -8,6 +8,7 @@ import { useFeatureFlag } from '#hooks/useFeatureFlag';
 import { AgeOfMoney } from './reports/AgeOfMoney';
 import { BalanceForecast } from './reports/BalanceForecast';
 import { BudgetAnalysis } from './reports/BudgetAnalysis';
+import { BudgetVsTarget } from './reports/BudgetVsTarget';
 import { Calendar } from './reports/Calendar';
 import { CashFlow } from './reports/CashFlow';
 import { Crossover } from './reports/Crossover';
@@ -35,6 +36,7 @@ function ReportBoundary({ children }: { children: ReactNode }) {
 export function ReportRouter() {
   const balanceForecastReportEnabled = useFeatureFlag('balanceForecastReport');
   const budgetAnalysisReportEnabled = useFeatureFlag('budgetAnalysisReport');
+  const budgetVsTargetReportEnabled = useFeatureFlag('budgetVsTargetReport');
   const sankeyReportEnabled = useFeatureFlag('sankeyReport');
   const monteCarloReportEnabled = useFeatureFlag('monteCarloReport');
 
@@ -153,6 +155,26 @@ export function ReportRouter() {
             element={
               <ReportBoundary>
                 <BudgetAnalysis />
+              </ReportBoundary>
+            }
+          />
+        </>
+      )}
+      {budgetVsTargetReportEnabled && (
+        <>
+          <Route
+            path="/budget-vs-target"
+            element={
+              <ReportBoundary>
+                <BudgetVsTarget />
+              </ReportBoundary>
+            }
+          />
+          <Route
+            path="/budget-vs-target/:id"
+            element={
+              <ReportBoundary>
+                <BudgetVsTarget />
               </ReportBoundary>
             }
           />
