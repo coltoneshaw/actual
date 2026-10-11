@@ -72,6 +72,7 @@ export function EnvelopeBalanceMenuModal({
               balance={envelopeBudget.catBalance(categoryId)}
               goal={envelopeBudget.catGoal(categoryId)}
               budgeted={envelopeBudget.catBudgeted(categoryId)}
+              spent={envelopeBudget.catSumAmount(categoryId)}
               longGoal={envelopeBudget.catLongGoal(categoryId)}
               CarryoverIndicator={({ style }) => (
                 <CarryoverIndicator
