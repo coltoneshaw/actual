@@ -31,7 +31,11 @@ import { useLocale } from '#hooks/useLocale';
 import { CategorySelector } from './CategorySelector';
 import { defaultsList, disabledList } from './disabledList';
 import { getLiveRange } from './getLiveRange';
-import { getIntervalFormat, ReportOptions } from './ReportOptions';
+import {
+  getIntervalFormat,
+  isBudgetBalanceKey,
+  ReportOptions,
+} from './ReportOptions';
 import type { dateRangeProps } from './ReportOptions';
 import { validateEnd, validateStart } from './reportRanges';
 import { setSessionReport } from './setSessionReport';
@@ -186,8 +190,8 @@ export function ReportSidebar({
     onReportChange({ type: 'modify' });
     setBalanceType(cond);
 
-    if (cond === 'Budgeted') {
-      // Budgeted does not support Payee and Account splits
+    if (isBudgetBalanceKey(cond)) {
+      // Budget balance types do not support Payee and Account splits
       if (
         customReportItems.groupBy === 'Payee' ||
         customReportItems.groupBy === 'Account'
@@ -196,7 +200,7 @@ export function ReportSidebar({
         setGroupBy('Category');
         defaultItems('Category');
       }
-      // Budgeted only supports Monthly and Yearly intervals
+      // Budget balance types only support Monthly and Yearly intervals
       if (
         customReportItems.interval === 'Daily' ||
         customReportItems.interval === 'Weekly'
@@ -309,7 +313,7 @@ export function ReportSidebar({
               option.description,
             ])}
             disabledKeys={
-              customReportItems.balanceType === 'Budgeted'
+              isBudgetBalanceKey(customReportItems.balanceType)
                 ? [...new Set([...disabledItems('split'), 'Payee', 'Account'])]
                 : disabledItems('split')
             }
@@ -366,7 +370,7 @@ export function ReportSidebar({
               option.description,
             ])}
             disabledKeys={
-              customReportItems.balanceType === 'Budgeted'
+              isBudgetBalanceKey(customReportItems.balanceType)
                 ? ['Daily', 'Weekly']
                 : []
             }

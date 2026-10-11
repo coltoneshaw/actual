@@ -1,5 +1,6 @@
 import * as monthUtils from '@actual-app/core/shared/months';
 import type {
+  balanceTypeOpType,
   CategoryEntity,
   CategoryGroupEntity,
   CustomReportEntity,
@@ -54,7 +55,27 @@ const balanceTypeOptions = [
     key: 'Budgeted',
     format: 'totalBudgeted' as const,
   },
+  {
+    description: t('Goal'),
+    key: 'Goal',
+    format: 'totalGoal' as const,
+  },
 ];
+
+/**
+ * Balance types read from the budget (one value per category per month)
+ * rather than from transactions.
+ */
+export function isBudgetBalanceType(
+  balanceTypeOp: balanceTypeOpType | undefined,
+): balanceTypeOp is 'totalBudgeted' | 'totalGoal' {
+  return balanceTypeOp === 'totalBudgeted' || balanceTypeOp === 'totalGoal';
+}
+
+/** Same as `isBudgetBalanceType`, for the saved `balanceType` key. */
+export function isBudgetBalanceKey(balanceType: string | undefined) {
+  return balanceType === 'Budgeted' || balanceType === 'Goal';
+}
 
 const groupByOptions = [
   { description: t('Category'), key: 'Category' },

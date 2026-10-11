@@ -40,6 +40,7 @@ export function ReportTableList({
               netDebts: interval.netDebts,
               totalTotals: interval.totalTotals,
               totalBudgeted: interval.totalBudgeted,
+              totalGoal: interval.totalGoal,
               intervalData: [],
               categories: [],
             };

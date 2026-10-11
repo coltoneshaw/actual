@@ -23,6 +23,7 @@ import type { LabelProps } from 'recharts';
 import { FinancialText } from '#components/FinancialText';
 import { useRechartsAnimation } from '#components/reports/chart-theme';
 import { Container } from '#components/reports/Container';
+import { isBudgetBalanceType } from '#components/reports/ReportOptions';
 import { useFormat } from '#hooks/useFormat';
 import type { FormatType } from '#hooks/useFormat';
 import { usePrivacyMode } from '#hooks/usePrivacyMode';
@@ -39,6 +40,7 @@ type PayloadItem = {
     netDebts: number;
     totalTotals: number;
     totalBudgeted: number;
+    totalGoal: number;
   };
 };
 
@@ -75,9 +77,12 @@ const CustomTooltip = ({
             <strong>{payload[0].payload.date}</strong>
           </div>
           <div style={{ lineHeight: 1.5 }}>
-            {['totalAssets', 'totalTotals', 'totalBudgeted'].includes(
-              balanceTypeOp,
-            ) && (
+            {[
+              'totalAssets',
+              'totalTotals',
+              'totalBudgeted',
+              'totalGoal',
+            ].includes(balanceTypeOp) && (
               <AlignedText
                 left={t('Assets:')}
                 right={
@@ -87,9 +92,12 @@ const CustomTooltip = ({
                 }
               />
             )}
-            {['totalDebts', 'totalTotals', 'totalBudgeted'].includes(
-              balanceTypeOp,
-            ) && (
+            {[
+              'totalDebts',
+              'totalTotals',
+              'totalBudgeted',
+              'totalGoal',
+            ].includes(balanceTypeOp) && (
               <AlignedText
                 left={t('Debts:')}
                 right={
@@ -119,19 +127,19 @@ const CustomTooltip = ({
                 }
               />
             )}
-            {['totalTotals', 'totalBudgeted'].includes(balanceTypeOp) && (
+            {(balanceTypeOp === 'totalTotals' ||
+              isBudgetBalanceType(balanceTypeOp)) && (
               <AlignedText
                 left={
-                  balanceTypeOp === 'totalBudgeted' ? t('Budgeted:') : t('Net:')
+                  balanceTypeOp === 'totalGoal'
+                    ? t('Goal:')
+                    : balanceTypeOp === 'totalBudgeted'
+                      ? t('Budgeted:')
+                      : t('Net:')
                 }
                 right={
                   <FinancialText as="strong">
-                    {format(
-                      balanceTypeOp === 'totalBudgeted'
-                        ? payload[0].payload.totalBudgeted
-                        : payload[0].payload.totalTotals,
-                      'financial',
-                    )}
+                    {format(payload[0].payload[balanceTypeOp], 'financial')}
                   </FinancialText>
                 }
               />

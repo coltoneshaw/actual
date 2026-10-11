@@ -43,7 +43,8 @@ export type balanceTypeOpType =
   | 'totalTotals'
   | 'netAssets'
   | 'netDebts'
-  | 'totalBudgeted';
+  | 'totalBudgeted'
+  | 'totalGoal';
 
 export type sortByOpType = 'asc' | 'desc' | 'name' | 'budget';
 
@@ -99,6 +100,7 @@ export type DataEntity = {
   netDebts: number;
   totalTotals: number;
   totalBudgeted: number;
+  totalGoal: number;
   scopeTagNames?: string[];
 };
 
@@ -122,6 +124,7 @@ export type IntervalEntity = {
   netDebts: number;
   totalTotals: number;
   totalBudgeted: number;
+  totalGoal: number;
 };
 
 export type GroupedEntity = {
@@ -136,6 +139,7 @@ export type GroupedEntity = {
   netAssets: number;
   netDebts: number;
   totalBudgeted: number;
+  totalGoal: number;
   categories?: GroupedEntity[];
   bucketTagNames?: string[];
 };

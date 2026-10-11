@@ -6,6 +6,7 @@ import type {
 } from '@actual-app/core/types/models';
 import type { SyncedPrefs } from '@actual-app/core/types/prefs';
 
+import { isBudgetBalanceType } from '#components/reports/ReportOptions';
 import type { QueryDataEntity } from '#components/reports/ReportOptions';
 import { aqlQuery } from '#queries/aqlQuery';
 
@@ -39,8 +40,9 @@ export async function fetchSpreadsheetQueryData({
   budgetType?: SyncedPrefs['budgetType'];
   groupBy?: string;
 }): Promise<{ assets: QueryDataEntity[]; debts: QueryDataEntity[] }> {
-  if (balanceTypeOp === 'totalBudgeted') {
+  if (isBudgetBalanceType(balanceTypeOp)) {
     return fetchBudgetData({
+      cell: balanceTypeOp === 'totalGoal' ? 'goal' : 'budget',
       startDate,
       endDate,
       interval,

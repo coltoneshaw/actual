@@ -43,6 +43,7 @@ import { ReportLegend } from '#components/reports/ReportLegend';
 import {
   defaultReport,
   getIntervalFormat,
+  isBudgetBalanceType,
   ReportOptions,
 } from '#components/reports/ReportOptions';
 import type { dateRangeProps } from '#components/reports/ReportOptions';
@@ -492,7 +493,7 @@ function CustomReportInner({
   });
 
   useEffect(() => {
-    if (balanceTypeOp !== 'totalBudgeted') {
+    if (!isBudgetBalanceType(balanceTypeOp)) {
       return;
     }
 
