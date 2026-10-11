@@ -66,6 +66,48 @@ function GoalTooltipRow({ children }) {
   );
 }
 
+type GoalSpentRowsProps = {
+  spent: Binding<'envelope-budget' | 'tracking-budget', 'sum-amount'>;
+  goal: number;
+};
+
+/**
+ * Funding status says whether the goal was budgeted; this says whether
+ * spending stayed within it. Covering an overspend makes a category fully
+ * funded, but it still spent more than its goal.
+ */
+function GoalSpentRows({ spent, goal }: GoalSpentRowsProps) {
+  const format = useFormat();
+  // Spending is stored as a negative amount; `0 -` avoids a negative zero.
+  const spentValue = 0 - (useSheetValue(spent) ?? 0);
+  const overGoal = spentValue - goal;
+
+  return (
+    <>
+      <GoalTooltipRow>
+        <Trans>
+          <div>Spent:</div>
+          <div>
+            {
+              {
+                amount: format(spentValue, 'financial'),
+              } as TransObjectLiteral
+            }
+          </div>
+        </Trans>
+      </GoalTooltipRow>
+      {overGoal > 0 && (
+        <span style={{ color: theme.errorText, fontWeight: 'bold' }}>
+          <Trans>
+            Over goal by{' '}
+            {{ amount: format(overGoal, 'financial') } as TransObjectLiteral}
+          </Trans>
+        </span>
+      )}
+    </>
+  );
+}
+
 type CellValueChildren = ComponentPropsWithoutRef<typeof CellValue>['children'];
 
 type ChildrenWithClassName = (
@@ -90,6 +132,8 @@ type BalanceWithCarryoverProps = Omit<
   >;
   goal: Binding<'envelope-budget' | 'tracking-budget', 'goal'>;
   budgeted: Binding<'envelope-budget' | 'tracking-budget', 'budget'>;
+  /** Expense categories pass their spending to compare it with the goal. */
+  spent?: Binding<'envelope-budget' | 'tracking-budget', 'sum-amount'>;
   longGoal: Binding<'envelope-budget' | 'tracking-budget', 'long-goal'>;
   isDisabled?: boolean;
   shouldInlineGoalStatus?: boolean;
@@ -102,6 +146,7 @@ export function BalanceWithCarryover({
   balance,
   goal,
   budgeted,
+  spent,
   longGoal,
   isDisabled,
   shouldInlineGoalStatus,
@@ -236,10 +281,21 @@ export function BalanceWithCarryover({
               </Trans>
             )}
           </GoalTooltipRow>
+          {spent && longGoalValue !== 1 && (
+            <GoalSpentRows spent={spent} goal={goalValue} />
+          )}
         </>
       );
     },
-    [budgetedValue, format, getDifferenceToGoal, goalValue, longGoalValue, t],
+    [
+      budgetedValue,
+      format,
+      getDifferenceToGoal,
+      goalValue,
+      longGoalValue,
+      spent,
+      t,
+    ],
   );
 
   return (

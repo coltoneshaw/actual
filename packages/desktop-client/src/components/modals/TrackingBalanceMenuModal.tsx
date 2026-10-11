@@ -69,6 +69,7 @@ export function TrackingBalanceMenuModal({
               balance={trackingBudget.catBalance(categoryId)}
               goal={trackingBudget.catGoal(categoryId)}
               budgeted={trackingBudget.catBudgeted(categoryId)}
+              spent={trackingBudget.catSumAmount(categoryId)}
               longGoal={trackingBudget.catLongGoal(categoryId)}
               CarryoverIndicator={({ style }) => (
                 <CarryoverIndicator
