@@ -522,6 +522,7 @@ export const ExpenseCategoryMonth = memo(function ExpenseCategoryMonth({
             balance={envelopeBudget.catBalance(category.id)}
             goal={envelopeBudget.catGoal(category.id)}
             budgeted={envelopeBudget.catBudgeted(category.id)}
+            spent={envelopeBudget.catSumAmount(category.id)}
             longGoal={envelopeBudget.catLongGoal(category.id)}
             tooltipDisabled={balanceMenuOpen}
           />
