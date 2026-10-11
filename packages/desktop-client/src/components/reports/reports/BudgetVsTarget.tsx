@@ -163,7 +163,8 @@ function BudgetVsTargetInternal({ widget }: BudgetVsTargetInternalProps) {
           alignItems: 'center',
           gap: 10,
           padding: 20,
-          paddingTop: 0,
+          paddingTop: 15,
+          flexShrink: 0,
         }}
       >
         <Select
