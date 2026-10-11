@@ -12,6 +12,7 @@ import type {
 
 import { FinancialText } from '#components/FinancialText';
 import { showActivity } from '#components/reports/graphs/showActivity';
+import { isBudgetBalanceType } from '#components/reports/ReportOptions';
 import { Cell, Row } from '#components/table';
 import { useAccounts } from '#hooks/useAccounts';
 import { useCategories } from '#hooks/useCategories';
@@ -181,7 +182,8 @@ export const ReportTableRow = memo(
                   />
                 );
               })
-            : ['totalTotals', 'totalBudgeted'].includes(balanceTypeOp) && (
+            : (balanceTypeOp === 'totalTotals' ||
+                isBudgetBalanceType(balanceTypeOp)) && (
                 <>
                   <Cell
                     value={format(item.totalAssets, 'financial')}

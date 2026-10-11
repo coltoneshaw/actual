@@ -9,7 +9,10 @@ import type {
   IntervalEntity,
 } from '@actual-app/core/types/models';
 
-import { ReportOptions } from '#components/reports/ReportOptions';
+import {
+  isBudgetBalanceType,
+  ReportOptions,
+} from '#components/reports/ReportOptions';
 import { Cell, Row } from '#components/table';
 
 type ReportTableHeaderProps = {
@@ -91,7 +94,8 @@ export function ReportTableHeader({
                 />
               );
             })
-          : ['totalTotals', 'totalBudgeted'].includes(balanceTypeOp) && (
+          : (balanceTypeOp === 'totalTotals' ||
+              isBudgetBalanceType(balanceTypeOp)) && (
               <>
                 <Cell
                   style={{

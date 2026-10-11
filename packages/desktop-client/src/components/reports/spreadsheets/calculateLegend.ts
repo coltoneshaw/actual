@@ -7,6 +7,7 @@ import type {
 } from '@actual-app/core/types/models';
 
 import { getColorScale } from '#components/reports/chart-theme';
+import { isBudgetBalanceType } from '#components/reports/ReportOptions';
 
 export function calculateLegend(
   intervalData: IntervalEntity[],
@@ -41,12 +42,9 @@ export function calculateLegend(
 
       if (
         balanceTypeOp === 'totalTotals' ||
-        balanceTypeOp === 'totalBudgeted'
+        isBudgetBalanceType(balanceTypeOp)
       ) {
-        const total =
-          balanceTypeOp === 'totalBudgeted'
-            ? data.totalBudgeted
-            : data.totalTotals;
+        const total = data[balanceTypeOp];
 
         if (total < 0) {
           return theme.reportsNumberNegative;

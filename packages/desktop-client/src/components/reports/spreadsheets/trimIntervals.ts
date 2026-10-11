@@ -21,6 +21,8 @@ function isEmptyForMetric(
       return interval.totalTotals === 0;
     case 'totalBudgeted':
       return interval.totalBudgeted === 0;
+    case 'totalGoal':
+      return interval.totalGoal === 0;
     default:
       return interval.totalTotals === 0;
   }

@@ -21,6 +21,7 @@ import {
   categoryLists,
   getIntervalFormat,
   groupBySelections,
+  isBudgetBalanceType,
   ReportOptions,
 } from '#components/reports/ReportOptions';
 import type { QueryDataEntity } from '#components/reports/ReportOptions';
@@ -119,6 +120,7 @@ export function createCustomSpreadsheet({
       netDebts: 0,
       totalTotals: 0,
       totalBudgeted: 0,
+      totalGoal: 0,
     };
 
     if (groupBy !== 'Tag' && groupByList.length === 0) {
@@ -178,7 +180,7 @@ export function createCustomSpreadsheet({
       return;
     }
 
-    if (interval === 'Weekly' && balanceTypeOp !== 'totalBudgeted') {
+    if (interval === 'Weekly' && !isBudgetBalanceType(balanceTypeOp)) {
       debts = debts.map(d => {
         return {
           ...d,
@@ -270,7 +272,7 @@ export function createCustomSpreadsheet({
           }
           if (
             balanceTypeOp === 'totalTotals' ||
-            balanceTypeOp === 'totalBudgeted'
+            isBudgetBalanceType(balanceTypeOp)
           ) {
             stackAmounts += netAmounts;
           }
@@ -304,10 +306,11 @@ export function createCustomSpreadsheet({
           totalDebts: perIntervalDebts,
           netAssets: perIntervalNetAssets,
           netDebts: perIntervalNetDebts,
-          // `totalBudgeted` intentionally mirrors `totalTotals`; the difference is
-          // the underlying dataset when `balanceTypeOp === 'totalBudgeted'`.
+          // The budget balance types intentionally mirror `totalTotals`; the
+          // difference is the underlying dataset (see `fetchBudgetData`).
           totalTotals: perIntervalTotals,
           totalBudgeted: perIntervalTotals,
+          totalGoal: perIntervalTotals,
         });
 
         return arr;
@@ -376,10 +379,11 @@ export function createCustomSpreadsheet({
       totalDebts,
       netAssets,
       netDebts,
-      // `totalBudgeted` intentionally mirrors `totalTotals`; the difference is
-      // the underlying dataset when `balanceTypeOp === 'totalBudgeted'`.
+      // The budget balance types intentionally mirror `totalTotals`; the
+      // difference is the underlying dataset (see `fetchBudgetData`).
       totalTotals: totalAssets + totalDebts,
       totalBudgeted: totalAssets + totalDebts,
+      totalGoal: totalAssets + totalDebts,
       scopeTagNames,
     });
   };
