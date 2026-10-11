@@ -25,8 +25,13 @@ export const reportModel = {
       }
     }
 
-    if (report.groupBy === 'Tag' && report.balanceType === 'Budgeted') {
-      throw new ValidationError('Budgeted reports cannot be split by tags.');
+    if (
+      report.groupBy === 'Tag' &&
+      (report.balanceType === 'Budgeted' || report.balanceType === 'Goal')
+    ) {
+      throw new ValidationError(
+        `${report.balanceType} reports cannot be split by tags.`,
+      );
     }
 
     const scope = report.tagScope;

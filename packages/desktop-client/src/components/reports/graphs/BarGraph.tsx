@@ -31,6 +31,7 @@ import { useRechartsAnimation } from '#components/reports/chart-theme';
 import { Container } from '#components/reports/Container';
 import { getCustomTick } from '#components/reports/getCustomTick';
 import { numberFormatterTooltip } from '#components/reports/numberFormatter';
+import { isBudgetBalanceType } from '#components/reports/ReportOptions';
 import { useAccounts } from '#hooks/useAccounts';
 import { useCategories } from '#hooks/useCategories';
 import { useFormat } from '#hooks/useFormat';
@@ -58,6 +59,7 @@ type PayloadItem = {
     netDebts: number;
     totalTotals: number;
     totalBudgeted: number;
+    totalGoal: number;
     networth: number;
     totalChange: number;
     children: [PayloadChild];
@@ -99,9 +101,12 @@ const CustomTooltip = ({
             <strong>{payload[0].payload[yAxis]}</strong>
           </div>
           <div style={{ lineHeight: 1.5 }}>
-            {['totalAssets', 'totalTotals', 'totalBudgeted'].includes(
-              balanceTypeOp,
-            ) && (
+            {[
+              'totalAssets',
+              'totalTotals',
+              'totalBudgeted',
+              'totalGoal',
+            ].includes(balanceTypeOp) && (
               <AlignedText
                 left={t('Assets:')}
                 right={
@@ -111,9 +116,12 @@ const CustomTooltip = ({
                 }
               />
             )}
-            {['totalDebts', 'totalTotals', 'totalBudgeted'].includes(
-              balanceTypeOp,
-            ) && (
+            {[
+              'totalDebts',
+              'totalTotals',
+              'totalBudgeted',
+              'totalGoal',
+            ].includes(balanceTypeOp) && (
               <AlignedText
                 left={t('Debts:')}
                 right={
@@ -143,19 +151,19 @@ const CustomTooltip = ({
                 }
               />
             )}
-            {['totalTotals', 'totalBudgeted'].includes(balanceTypeOp) && (
+            {(balanceTypeOp === 'totalTotals' ||
+              isBudgetBalanceType(balanceTypeOp)) && (
               <AlignedText
                 left={
-                  balanceTypeOp === 'totalBudgeted' ? t('Budgeted:') : t('Net:')
+                  balanceTypeOp === 'totalGoal'
+                    ? t('Goal:')
+                    : balanceTypeOp === 'totalBudgeted'
+                      ? t('Budgeted:')
+                      : t('Net:')
                 }
                 right={
                   <FinancialText as="strong">
-                    {format(
-                      balanceTypeOp === 'totalBudgeted'
-                        ? payload[0].payload.totalBudgeted
-                        : payload[0].payload.totalTotals,
-                      'financial',
-                    )}
+                    {format(payload[0].payload[balanceTypeOp], 'financial')}
                   </FinancialText>
                 }
               />
@@ -176,7 +184,7 @@ const customLabel = (props, typeOp, format) => {
   const textSize = adjustTextSize({
     sized: props.width,
     type:
-      typeOp === 'totalTotals' || typeOp === 'totalBudgeted'
+      typeOp === 'totalTotals' || isBudgetBalanceType(typeOp)
         ? 'default'
         : 'variable',
     values: props.value,

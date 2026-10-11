@@ -11,6 +11,7 @@ function point(date: string, values: Record<string, number>) {
     netDebts: 0,
     totalTotals: 0,
     totalBudgeted: 0,
+    totalGoal: 0,
     ...values,
   } satisfies DataEntity['intervalData'][number];
 }

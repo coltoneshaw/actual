@@ -4,6 +4,7 @@ import type { GroupedEntity } from '@actual-app/core/types/models';
 
 import {
   categoryLists,
+  isBudgetBalanceType,
   ReportOptions,
 } from '#components/reports/ReportOptions';
 import type { QueryDataEntity } from '#components/reports/ReportOptions';
@@ -69,7 +70,7 @@ export function createGroupedSpreadsheet({
       budgetType,
     }));
 
-    if (interval === 'Weekly' && balanceTypeOp !== 'totalBudgeted') {
+    if (interval === 'Weekly' && !isBudgetBalanceType(balanceTypeOp)) {
       debts = debts.map(d => {
         return {
           ...d,

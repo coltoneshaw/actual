@@ -3,6 +3,8 @@ import type {
   GroupedEntity,
 } from '@actual-app/core/types/models';
 
+import { isBudgetBalanceType } from '#components/reports/ReportOptions';
+
 export function filterEmptyRows({
   showEmpty,
   data,
@@ -13,7 +15,7 @@ export function filterEmptyRows({
   balanceTypeOp?: balanceTypeOpType;
 }): boolean {
   let showHide: boolean;
-  if (balanceTypeOp === 'totalTotals' || balanceTypeOp === 'totalBudgeted') {
+  if (balanceTypeOp === 'totalTotals' || isBudgetBalanceType(balanceTypeOp)) {
     showHide =
       data['totalDebts'] !== 0 ||
       data['totalAssets'] !== 0 ||

@@ -1,11 +1,19 @@
+import { send } from '@actual-app/core/platform/client/connection';
 import type {
   CategoryEntity,
   CategoryGroupEntity,
   RuleConditionEntity,
 } from '@actual-app/core/types/models';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 
-import { filterCategoriesByConditions } from './budgetDataQuery';
+import {
+  fetchBudgetData,
+  filterCategoriesByConditions,
+} from './budgetDataQuery';
+
+vi.mock('@actual-app/core/platform/client/connection', () => ({
+  send: vi.fn(),
+}));
 
 const categoryGroups = [
   { id: 'group-bills', name: 'Bills' },
@@ -98,5 +106,41 @@ describe('filterCategoriesByConditions', () => {
     );
 
     expect(result.map(category => category.id)).toEqual(['cat-dining']);
+  });
+});
+
+describe('fetchBudgetData', () => {
+  const sheet = 'budget202611';
+  vi.mocked(send).mockResolvedValue([
+    { name: `${sheet}!budget-cat-rent`, value: 150000 },
+    { name: `${sheet}!long-goal-cat-rent`, value: 1 },
+    { name: `${sheet}!goal-cat-rent`, value: 120000 },
+    { name: `${sheet}!budget-cat-dining`, value: 30000 },
+    { name: `${sheet}!goal-cat-dining`, value: 0 },
+  ]);
+
+  const fetch = (cell?: 'budget' | 'goal') =>
+    fetchBudgetData({
+      startDate: '2026-11-01',
+      endDate: '2026-11-30',
+      interval: 'Monthly',
+      categories,
+      categoryGroups,
+      cell,
+    });
+
+  it('reads the budgeted amount by default', async () => {
+    const { assets } = await fetch();
+    expect(assets.map(a => [a.category, a.amount])).toEqual([
+      ['cat-rent', 150000],
+      ['cat-dining', 30000],
+    ]);
+  });
+
+  it('reads the goal, never the long-goal flag, and skips categories without one', async () => {
+    const { assets } = await fetch('goal');
+    expect(assets.map(a => [a.category, a.amount])).toEqual([
+      ['cat-rent', 120000],
+    ]);
   });
 });

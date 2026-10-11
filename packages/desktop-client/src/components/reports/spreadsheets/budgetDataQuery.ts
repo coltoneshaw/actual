@@ -186,6 +186,7 @@ export async function fetchBudgetData({
   conditions,
   conditionsOp,
   budgetType = 'envelope',
+  cell = 'budget',
 }: {
   startDate: string;
   endDate: string;
@@ -195,6 +196,8 @@ export async function fetchBudgetData({
   conditions?: RuleConditionEntity[];
   conditionsOp?: BudgetDataConditionsOp;
   budgetType?: SyncedPrefs['budgetType'];
+  /** Which per-category budget value to read: the amount budgeted or the goal. */
+  cell?: 'budget' | 'goal';
 }): Promise<{ assets: QueryDataEntity[]; debts: QueryDataEntity[] }> {
   const groupById = new Map(categoryGroups.map(g => [g.id, g] as const));
   const assets: QueryDataEntity[] = [];
@@ -235,8 +238,10 @@ export async function fetchBudgetData({
         continue;
       }
 
-      const budgetCell = monthData.find((cell: BudgetMonthCell) =>
-        cell.name.endsWith(`budget-${cat.id}`),
+      // Cells are named `<sheet>!<name>`; match the whole name so `goal-`
+      // never picks up `long-goal-`.
+      const budgetCell = monthData.find((c: BudgetMonthCell) =>
+        c.name.endsWith(`!${cell}-${cat.id}`),
       );
 
       const amount = Number(budgetCell?.value) || 0;

@@ -11,7 +11,10 @@ import type {
 } from '@actual-app/core/types/models';
 import { t } from 'i18next';
 
-import { ReportOptions } from '#components/reports/ReportOptions';
+import {
+  isBudgetBalanceType,
+  ReportOptions,
+} from '#components/reports/ReportOptions';
 
 type showActivityProps = {
   navigate: NavigateFunction;
@@ -118,7 +121,8 @@ export function showActivity({
     },
     !(
       ['netAssets', 'netDebts'].includes(balanceTypeOp) ||
-      (['totalTotals', 'totalBudgeted'].includes(balanceTypeOp) &&
+      ((balanceTypeOp === 'totalTotals' ||
+        isBudgetBalanceType(balanceTypeOp)) &&
         (type === 'totals' || type === 'time'))
     ) && {
       field: 'amount',
@@ -146,10 +150,9 @@ export function showActivity({
       },
   ].filter(f => f);
 
-  void navigate(balanceTypeOp === 'totalBudgeted' ? '/budget' : '/accounts', {
-    state:
-      balanceTypeOp === 'totalBudgeted'
-        ? { goBack: true }
-        : { goBack: true, filterConditions },
+  void navigate(isBudgetBalanceType(balanceTypeOp) ? '/budget' : '/accounts', {
+    state: isBudgetBalanceType(balanceTypeOp)
+      ? { goBack: true }
+      : { goBack: true, filterConditions },
   });
 }

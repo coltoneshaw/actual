@@ -24,6 +24,7 @@ import type {
 import { toPng } from 'html-to-image';
 
 import { FilterButton } from '#components/filters/FiltersMenu';
+import { isBudgetBalanceKey } from '#components/reports/ReportOptions';
 
 import { GraphButton } from './GraphButton';
 import { SaveReportWrapper } from './SaveReport';
@@ -243,7 +244,7 @@ export function ReportTopbar({
             onReportChange({ type: 'modify' });
           }}
           exclude={
-            customReportItems.balanceType === 'Budgeted'
+            isBudgetBalanceKey(customReportItems.balanceType)
               ? [
                   'date',
                   'account',
