@@ -100,6 +100,10 @@ export type BudgetAnalysisWidget = AbstractWidget<
     showHiddenCategories?: boolean;
   } | null
 >;
+export type BudgetVsTargetWidget = AbstractWidget<
+  'budget-vs-target-card',
+  { name?: string; month?: string } | null
+>;
 export type CustomReportWidget = AbstractWidget<
   'custom-report',
   { id: string }
@@ -339,6 +343,7 @@ type SpecializedWidget =
   | CashFlowWidget
   | SpendingWidget
   | BudgetAnalysisWidget
+  | BudgetVsTargetWidget
   | CrossoverWidget
   | MarkdownWidget
   | MonteCarloWidget
